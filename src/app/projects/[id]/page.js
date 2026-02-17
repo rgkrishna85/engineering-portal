@@ -41,9 +41,19 @@ export default function ProjectDetail() {
                         <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>{project.name}</h1>
                         <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8 }}>{project.client} • {project.region_name}</p>
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                            <span className={`badge badge-${project.status}`}>{project.status.replace('_', ' ')}</span>
-                            <span className={`badge badge-${project.priority}`}>{project.priority} priority</span>
-                            <span className="badge" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }}>📅 {project.start_date} → {project.end_date}</span>
+                            {project.status && (
+                                <span className={`badge badge-${project.status}`}>
+                                    {project.status.replace('_', ' ')}
+                                </span>
+                            )}
+                            {project.priority && (
+                                <span className={`badge badge-${project.priority}`}>
+                                    {project.priority} priority
+                                </span>
+                            )}
+                            <span className="badge" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }}>
+                                📅 {project.start_date || 'TBD'} → {project.end_date || 'TBD'}
+                            </span>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: 16 }}>

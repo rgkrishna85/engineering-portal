@@ -233,7 +233,24 @@ export function queryOne(database, sql, params = []) {
     return { workload: aggregatedWorkload, total_employees: emps.length };
   }
 
-  // Projects by ID
+  // Projects by ID (Basic or Join)
+  if (lowerSql.includes('from projects') && lowerSql.includes('where p.id = ?')) {
+    const proj = database.projects.find(p => p.id === params[0]);
+    if (!proj) return null;
+    const region = database.regions.find(r => r.id === proj.region_id);
+    return {
+      ...proj,
+      region_name: region?.name || 'Unknown',
+      region_code: region?.code || 'NA',
+      region_color: region?.color || '#ccc',
+      team: database.assignments.filter(a => a.project_id === proj.id).map(a => ({
+        ...a,
+        employee_name: database.employees.find(e => e.id === a.employee_id)?.name || 'Employee'
+      }))
+    };
+  }
+
+  // Fallback Projects by ID
   if (lowerSql.includes('from projects where id = ?')) {
     const proj = database.projects.find(p => p.id === params[0]);
     if (!proj) return null;
