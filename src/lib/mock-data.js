@@ -145,8 +145,46 @@ export const seedData = {
     deliverables: [
         { id: 'del-1', project_id: 'proj-001', title: 'Initial Structural Survey', assigned_to: 'emp-mda-1', due_date: '2025-10-15', status: 'completed' },
         { id: 'del-2', project_id: 'proj-001', title: 'Fatigue Life Analysis', assigned_to: 'emp-mda-2', due_date: '2026-01-20', status: 'in_progress' },
+        { id: 'del-3', project_id: 'proj-002', title: 'Process Flow Diagrams', assigned_to: 'emp-mda-3', due_date: '2025-08-01', status: 'completed' },
     ],
-    reviews: [],
+    reviews: [
+        {
+            id: 'rev-1',
+            project_id: 'proj-001',
+            deliverable_id: 'del-1',
+            reviewer_id: 'mgr-mda-1',
+            review_date: '2025-10-20',
+            status: 'approved',
+            rating: 5,
+            comments: 'Initial survey is comprehensive. Methodology is sound. No major findings.',
+            doc_url: '/docs/reviews/proj-001-rev1.pdf',
+            review_type: 'Technical'
+        },
+        {
+            id: 'rev-2',
+            project_id: 'proj-001',
+            deliverable_id: 'del-1',
+            reviewer_id: 'dept-mgr-mda',
+            review_date: '2025-10-22',
+            status: 'approved',
+            rating: 4,
+            comments: 'Good progress. Ensure the next phase focuses on fatigue analysis as planned.',
+            doc_url: '/docs/reviews/proj-001-rev2.pdf',
+            review_type: 'Managerial'
+        },
+        {
+            id: 'rev-3',
+            project_id: 'proj-002',
+            deliverable_id: 'del-3',
+            reviewer_id: 'mgr-mda-2',
+            review_date: '2025-08-05',
+            status: 'approved',
+            rating: 5,
+            comments: 'PFDs are accurate and follow all internal standards.',
+            doc_url: '/docs/reviews/proj-002-rev1.pdf',
+            review_type: 'Technical'
+        }
+    ],
     employee_skills,
     employee_trainings,
     workflows: [],

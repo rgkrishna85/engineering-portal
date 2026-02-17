@@ -160,30 +160,48 @@ export default function ProjectDetail() {
                     {project.reviews?.length > 0 ? (
                         <table className="data-table">
                             <thead>
-                                <tr><th>Deliverable</th><th>Reviewer</th><th>Type</th><th>Status</th><th>Rating</th></tr>
+                                <tr><th>Deliverable / Type</th><th>Reviewer / Date</th><th>Status</th><th>Rating</th><th>Evidence</th></tr>
                             </thead>
                             <tbody>
                                 {project.reviews.map(r => (
                                     <tr key={r.id}>
-                                        <td>{r.deliverable_title}</td>
-                                        <td>{r.reviewer_name}</td>
-                                        <td>{r.review_type}</td>
+                                        <td>
+                                            <div style={{ fontWeight: 600 }}>{r.deliverable_title}</div>
+                                            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{r.review_type} Review</div>
+                                        </td>
+                                        <td>
+                                            <div style={{ fontWeight: 600 }}>{r.reviewer_name}</div>
+                                            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{r.review_date}</div>
+                                        </td>
                                         <td><span className={`badge badge-${r.status}`}>{r.status}</span></td>
                                         <td>{r.rating ? '⭐'.repeat(r.rating) : '—'}</td>
+                                        <td>
+                                            {r.doc_url && (
+                                                <a href={r.doc_url} style={{ color: 'var(--primary)', textDecoration: 'none', fontSize: 12, fontWeight: 600 }} target="_blank" rel="noopener noreferrer">
+                                                    📄 Findings Doc
+                                                </a>
+                                            )}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                    ) : <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>No reviews yet</p>}
+                    ) : <p style={{ color: 'var(--text-muted)', fontSize: 13, padding: '20px 0' }}>No reviews recorded for this project yet.</p>}
+
                     {project.reviews?.some(r => r.comments) && (
-                        <div style={{ marginTop: 20 }}>
-                            <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Review Comments</h4>
-                            {project.reviews.filter(r => r.comments).map(r => (
-                                <div key={r.id} style={{ padding: 12, background: 'var(--bg-glass)', borderRadius: 'var(--radius-sm)', marginBottom: 8, border: '1px solid var(--border-color)' }}>
-                                    <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{r.reviewer_name} — {r.review_type}</div>
-                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{r.comments}</div>
-                                </div>
-                            ))}
+                        <div style={{ marginTop: 32 }}>
+                            <h4 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>📝 Detailed Findings</h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                {project.reviews.filter(r => r.comments).map(r => (
+                                    <div key={r.id} style={{ padding: 16, background: 'var(--bg-glass)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', borderLeft: '4px solid var(--primary)' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                                            <div style={{ fontSize: 12, fontWeight: 700 }}>{r.reviewer_name} — {r.deliverable_title}</div>
+                                            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{r.review_date}</div>
+                                        </div>
+                                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{r.comments}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>

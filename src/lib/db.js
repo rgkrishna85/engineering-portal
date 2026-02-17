@@ -172,7 +172,8 @@ export function queryAll(database, sql, params = []) {
       }
       return revs.map(r => ({
         ...r,
-        reviewer_name: database.employees.find(e => e.id === r.reviewer_id)?.name || 'Unknown'
+        reviewer_name: database.employees.find(e => e.id === r.reviewer_id)?.name || 'Unknown',
+        deliverable_title: database.deliverables.find(d => d.id === r.deliverable_id)?.title || 'General Review'
       }));
     }
 
