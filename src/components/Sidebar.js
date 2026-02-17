@@ -13,7 +13,7 @@ const navSections = [
     {
         title: 'Management',
         links: [
-            { href: '/employees', icon: '👥', label: 'Employees', badge: '77' },
+            { href: '/employees', icon: '👥', label: 'Employees', badge: '198' },
             { href: '/projects', icon: '📁', label: 'Projects', badge: '10' },
             { href: '/workload', icon: '📈', label: 'Workload Mgmt' },
             { href: '/training', icon: '🎓', label: 'Training & Skills' },

@@ -24,7 +24,7 @@ const skills = [
     { id: 's15', name: 'AI/ML Applications', category: 'Technology' },
 ];
 
-const departments = ['MDA', 'ICEE', 'OPS'];
+const departments = ['MDA', 'ICEE', 'OPS', 'PE', 'PPE'];
 
 const activities_list = [
     'FEA Analysis - Project Alpha',
@@ -66,69 +66,87 @@ const genDailyWorkload = (empStatus) => {
 const genWorkload = () => Array.from({ length: 12 }, () => Math.floor(Math.random() * 15) + 35);
 
 const employees = [];
-
-const mdaManagers = [
-    { id: 'mgr-mda-1', name: 'Robert Chen', email: 'robert.chen@engportal.com', role: 'MDA Unit Manager', department: 'MDA', region_id: 'reg-na', status: 'active', utilization: 85, join_date: '2015-05-10', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
-    { id: 'mgr-mda-2', name: 'Anjali Gupta', email: 'anjali.gupta@engportal.com', role: 'MDA Technical Lead', department: 'MDA', region_id: 'reg-sa', status: 'active', utilization: 90, join_date: '2016-08-20', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
-    { id: 'mgr-mda-3', name: 'Marcus Steiner', email: 'marcus.steiner@engportal.com', role: 'MDA Design Manager', department: 'MDA', region_id: 'reg-eu', status: 'active', utilization: 78, join_date: '2017-03-15', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
-    { id: 'mgr-mda-4', name: 'Elena Rodriguez', email: 'elena.rodriguez@engportal.com', role: 'MDA Analysis Lead', department: 'MDA', region_id: 'reg-la', status: 'active', utilization: 82, join_date: '2018-11-05', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
-];
-employees.push(...mdaManagers);
-
-employees.push({
-    id: 'dept-mgr-mda',
-    name: 'James Sterling',
-    email: 'james.sterling@engportal.com',
-    role: 'MDA Department Head',
-    department: 'MDA',
-    region_id: 'reg-na',
-    status: 'active',
-    utilization: 60,
-    join_date: '2010-01-01',
-    manager_id: null,
-    workload: genWorkload(),
-    dailyWorkload: genDailyWorkload('active')
-});
-
 const names = ['Liam', 'Noah', 'Oliver', 'James', 'Elijah', 'William', 'Henry', 'Lucas', 'Benjamin', 'Theodore', 'Emma', 'Charlotte', 'Amelia', 'Sophia', 'Mia', 'Isabella', 'Ava', 'Evelyn', 'Luna', 'Harper'];
 const surnames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
 
-for (let i = 1; i <= 70; i++) {
-    const mgr = mdaManagers[i % 4];
-    const name = names[Math.floor(Math.random() * names.length)];
-    const surname = surnames[Math.floor(Math.random() * surnames.length)];
-    const empStatus = Math.random() > 0.1 ? 'active' : 'on_leave';
-    employees.push({
-        id: `emp-mda-${i}`,
-        name: `${name} ${surname} ${i}`,
-        email: `${name.toLowerCase()}.${surname.toLowerCase()}${i}@engportal.com`,
-        role: i % 5 === 0 ? 'Senior Engineer' : 'Junior Engineer',
-        department: 'MDA',
-        region_id: mgr.region_id,
-        status: empStatus,
-        utilization: Math.floor(Math.random() * 40) + 60,
-        join_date: '2022-01-01',
-        manager_id: mgr.id,
-        workload: genWorkload(),
-        dailyWorkload: genDailyWorkload(empStatus)
-    });
-}
+// Helper to create a department hierarchy
+const createDepartment = (deptCode, headName, managerNames, employeeCount) => {
+    const headId = `dept-mgr-${deptCode.toLowerCase()}`;
 
-employees.push(
-    { id: 'emp-icee-1', name: 'Kenji Sato', email: 'kenji.sato@engportal.com', role: 'ICEE Manager', department: 'ICEE', region_id: 'reg-eu', status: 'active', utilization: 88, join_date: '2018-05-15', manager_id: null, workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
-    { id: 'emp-ops-1', name: 'Sarah Miller', email: 'sarah.miller@engportal.com', role: 'OPS Lead', department: 'OPS', region_id: 'reg-na', status: 'active', utilization: 92, join_date: '2017-10-10', manager_id: null, workload: genWorkload(), dailyWorkload: genDailyWorkload('active') }
-);
+    // Create Dept Head
+    employees.push({
+        id: headId,
+        name: headName,
+        email: `${headName.toLowerCase().replace(' ', '.')}@engportal.com`,
+        role: `${deptCode} Department Head`,
+        department: deptCode,
+        region_id: 'reg-na',
+        status: 'active',
+        utilization: 65,
+        join_date: '2010-05-15',
+        manager_id: null,
+        workload: genWorkload(),
+        dailyWorkload: genDailyWorkload('active')
+    });
+
+    // Create Unit Managers
+    const managers = managerNames.map((name, idx) => {
+        const mgrId = `mgr-${deptCode.toLowerCase()}-${idx + 1}`;
+        const mgr = {
+            id: mgrId,
+            name,
+            email: `${name.toLowerCase().replace(' ', '.')}@engportal.com`,
+            role: `${deptCode} Unit Manager`,
+            department: deptCode,
+            region_id: regions[idx % regions.length].id,
+            status: 'active',
+            utilization: 80,
+            join_date: '2015-01-20',
+            manager_id: headId,
+            workload: genWorkload(),
+            dailyWorkload: genDailyWorkload('active')
+        };
+        employees.push(mgr);
+        return mgr;
+    });
+
+    // Create Employees
+    for (let i = 1; i <= employeeCount; i++) {
+        const mgr = managers[i % managers.length];
+        const name = names[Math.floor(Math.random() * names.length)];
+        const surname = surnames[Math.floor(Math.random() * surnames.length)];
+        const empStatus = Math.random() > 0.1 ? 'active' : 'on_leave';
+        employees.push({
+            id: `emp-${deptCode.toLowerCase()}-${i}`,
+            name: `${name} ${surname} ${i}`,
+            email: `${name.toLowerCase()}.${surname.toLowerCase()}${i}@engportal.com`,
+            role: i % 5 === 0 ? 'Senior Engineer' : 'Junior Engineer',
+            department: deptCode,
+            region_id: mgr.region_id,
+            status: empStatus,
+            utilization: Math.floor(Math.random() * 40) + 60,
+            join_date: '2022-03-10',
+            manager_id: mgr.id,
+            workload: genWorkload(),
+            dailyWorkload: genDailyWorkload(empStatus)
+        });
+    }
+};
+
+// Create Hierarchies for all departments
+createDepartment('MDA', 'James Sterling', ['Robert Chen', 'Anjali Gupta', 'Marcus Steiner', 'Elena Rodriguez'], 50);
+createDepartment('ICEE', 'Hiroshi Tanaka', ['Kenji Sato', 'Mei Ling', 'David Park'], 40);
+createDepartment('OPS', 'Sarah Miller', ['John Thompson', 'Maria Garcia'], 30);
+createDepartment('PE', 'Arthur Windsor', ['Thomas Shelby', 'Elizabeth Swann'], 35);
+createDepartment('PPE', 'Victoria Vance', ['Leo Messi', 'Cristiano Ronaldo'], 25);
 
 const assignments = [];
 const employee_skills = [];
 const employee_trainings = [];
 
-// Populate some assignments and skills for realism
 employees.forEach(emp => {
-    // 2 skills per employee
     employee_skills.push({ employee_id: emp.id, skill_id: 's' + (Math.floor(Math.random() * 10) + 1), proficiency: Math.floor(Math.random() * 3) + 3 });
     employee_skills.push({ employee_id: emp.id, skill_id: 's' + (Math.floor(Math.random() * 5) + 11), proficiency: Math.floor(Math.random() * 2) + 2 });
-    // 1 training for each
     employee_trainings.push({ employee_id: emp.id, training_id: 't' + (Math.floor(Math.random() * 5) + 1), status: Math.random() > 0.3 ? 'completed' : 'in_progress', completed_date: '2024-12-01', score: 85 });
 });
 
@@ -148,42 +166,9 @@ export const seedData = {
         { id: 'del-3', project_id: 'proj-002', title: 'Process Flow Diagrams', assigned_to: 'emp-mda-3', due_date: '2025-08-01', status: 'completed' },
     ],
     reviews: [
-        {
-            id: 'rev-1',
-            project_id: 'proj-001',
-            deliverable_id: 'del-1',
-            reviewer_id: 'mgr-mda-1',
-            review_date: '2025-10-20',
-            status: 'approved',
-            rating: 5,
-            comments: 'Initial survey is comprehensive. Methodology is sound. No major findings.',
-            doc_url: '/docs/reviews/proj-001-rev1.pdf',
-            review_type: 'Technical'
-        },
-        {
-            id: 'rev-2',
-            project_id: 'proj-001',
-            deliverable_id: 'del-1',
-            reviewer_id: 'dept-mgr-mda',
-            review_date: '2025-10-22',
-            status: 'approved',
-            rating: 4,
-            comments: 'Good progress. Ensure the next phase focuses on fatigue analysis as planned.',
-            doc_url: '/docs/reviews/proj-001-rev2.pdf',
-            review_type: 'Managerial'
-        },
-        {
-            id: 'rev-3',
-            project_id: 'proj-002',
-            deliverable_id: 'del-3',
-            reviewer_id: 'mgr-mda-2',
-            review_date: '2025-08-05',
-            status: 'approved',
-            rating: 5,
-            comments: 'PFDs are accurate and follow all internal standards.',
-            doc_url: '/docs/reviews/proj-002-rev1.pdf',
-            review_type: 'Technical'
-        }
+        { id: 'rev-1', project_id: 'proj-001', deliverable_id: 'del-1', reviewer_id: 'mgr-mda-1', review_date: '2025-10-20', status: 'approved', rating: 5, comments: 'Initial survey is comprehensive. Methodology is sound. No major findings.', doc_url: '/docs/reviews/proj-001-rev1.pdf', review_type: 'Technical' },
+        { id: 'rev-2', project_id: 'proj-001', deliverable_id: 'del-1', reviewer_id: 'dept-mgr-mda', review_date: '2025-10-22', status: 'approved', rating: 4, comments: 'Good progress. Ensure the next phase focuses on fatigue analysis as planned.', doc_url: '/docs/reviews/proj-001-rev2.pdf', review_type: 'Managerial' },
+        { id: 'rev-3', project_id: 'proj-002', deliverable_id: 'del-3', reviewer_id: 'mgr-mda-2', review_date: '2025-08-05', status: 'approved', rating: 5, comments: 'PFDs are accurate and follow all internal standards.', doc_url: '/docs/reviews/proj-002-rev1.pdf', review_type: 'Technical' }
     ],
     employee_skills,
     employee_trainings,
