@@ -27,7 +27,34 @@ export function queryAll(database, sql, params = []) {
       }));
     }
 
-    // 2. Training Page - Advanced skills query (Must be before general skills check)
+    // Workload Aggregation (Custom for the new feature)
+    if (lowerSql.includes('from employees') && lowerSql.includes('group by manager_id')) {
+      const dept = params[0];
+      const managers = database.employees.filter(e => e.department === dept && e.role.toLowerCase().includes('manager') && e.id.startsWith('mgr-'));
+
+      return managers.map(mgr => {
+        const team = database.employees.filter(e => e.manager_id === mgr.id);
+        // Aggregate 12-week workload
+        const aggregatedWorkload = Array.from({ length: 12 }, (_, weekIndex) => {
+          return team.reduce((sum, emp) => sum + (emp.workload ? emp.workload[weekIndex] : 0), 0);
+        });
+        return {
+          id: mgr.id,
+          name: mgr.name,
+          team_count: team.length,
+          workload: aggregatedWorkload,
+          team: team.map(emp => ({
+            id: emp.id,
+            name: emp.name,
+            role: emp.role,
+            status: emp.status,
+            dailyWorkload: emp.dailyWorkload // This is the Mon-Fri granular data
+          }))
+        };
+      });
+    }
+
+    // 2. Training Page - Advanced skills query
     if (lowerSql.includes('left join employee_skills es on s.id = es.skill_id group by s.id')) {
       return database.skills.map(s => {
         const owners = database.employee_skills.filter(es => es.skill_id === s.id);
@@ -55,7 +82,7 @@ export function queryAll(database, sql, params = []) {
         });
     }
 
-    // 4. Employee detail - Skills (Must be before general skills check)
+    // 4. Employee detail - Skills
     if (lowerSql.includes('from employee_skills')) {
       if (lowerSql.includes('where es.employee_id = ?') || lowerSql.includes('where employee_id = ?')) {
         return database.employee_skills
@@ -91,6 +118,12 @@ export function queryAll(database, sql, params = []) {
       }
       if (lowerSql.includes('where status = ?')) {
         emps = emps.filter(e => e.status === params[0]);
+      }
+      if (lowerSql.includes('where manager_id = ?')) {
+        emps = emps.filter(e => e.manager_id === params[0]);
+      }
+      if (lowerSql.includes('where department = ?')) {
+        emps = emps.filter(e => e.department === params[0]);
       }
       return emps.map(e => ({
         ...e,
@@ -188,6 +221,16 @@ export function queryOne(database, sql, params = []) {
     const emp = database.employees.find(e => e.id === params[0]);
     if (!emp) return null;
     return emp;
+  }
+
+  // Workload sum for department (James Sterling view)
+  if (lowerSql.includes('sum(workload)') && lowerSql.includes('where department = ?')) {
+    const dept = params[0];
+    const emps = database.employees.filter(e => e.department === dept);
+    const aggregatedWorkload = Array.from({ length: 12 }, (_, weekIndex) => {
+      return emps.reduce((sum, emp) => sum + (emp.workload ? emp.workload[weekIndex] : 0), 0);
+    });
+    return { workload: aggregatedWorkload, total_employees: emps.length };
   }
 
   // Projects by ID

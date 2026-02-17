@@ -1,93 +1,148 @@
+const regions = [
+    { id: 'reg-na', name: 'North America', code: 'NA', timezone: 'America/New_York', color: '#6366f1' },
+    { id: 'reg-sa', name: 'South Asia', code: 'SA', timezone: 'Asia/Kolkata', color: '#f59e0b' },
+    { id: 'reg-eu', name: 'Europe', code: 'EU', timezone: 'Europe/London', color: '#10b981' },
+    { id: 'reg-la', name: 'Latin America', code: 'LATAM', timezone: 'America/Sao_Paulo', color: '#ef4444' },
+    { id: 'reg-uae', name: 'UAE', code: 'UAE', timezone: 'Asia/Dubai', color: '#8b5cf6' },
+];
+
+const skills = [
+    { id: 's1', name: 'Structural Analysis', category: 'Engineering' },
+    { id: 's2', name: 'FEA/FEM', category: 'Engineering' },
+    { id: 's3', name: 'CFD', category: 'Engineering' },
+    { id: 's4', name: 'CAD Design', category: 'Design' },
+    { id: 's5', name: 'Project Management', category: 'Management' },
+    { id: 's6', name: 'Risk Assessment', category: 'Engineering' },
+    { id: 's7', name: 'Quality Assurance', category: 'Quality' },
+    { id: 's8', name: 'Python/Automation', category: 'Technology' },
+    { id: 's9', name: 'Report Writing', category: 'Documentation' },
+    { id: 's10', name: 'Client Communication', category: 'Soft Skills' },
+    { id: 's11', name: 'ASME Standards', category: 'Engineering' },
+    { id: 's12', name: 'Piping Design', category: 'Engineering' },
+    { id: 's13', name: 'Electrical Systems', category: 'Engineering' },
+    { id: 's14', name: 'Process Engineering', category: 'Engineering' },
+    { id: 's15', name: 'AI/ML Applications', category: 'Technology' },
+];
+
+const departments = ['MDA', 'ICEE', 'OPS'];
+
+const activities_list = [
+    'FEA Analysis - Project Alpha',
+    'CFD Simulation - Turbine Blade',
+    'Structural Review - Site A',
+    'Technical Documentation',
+    'Client Strategy Meeting',
+    'Risk Assessment Workshop',
+    'QA Audit - Manufacturing',
+    'Pipeline Design Optimization',
+    'ASME Standards Compliance Check',
+    'Automation Scripting (Python)',
+];
+
+// Helper to generate random daily workload and activities for 5 days (Current Week)
+const genDailyWorkload = (empStatus) => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    return days.map(day => {
+        if (empStatus === 'on_leave') return { day, hours: 0, status: 'leave', activity: 'Annual Leave' };
+
+        // 5% chance of company holiday
+        if (Math.random() < 0.05) return { day, hours: 0, status: 'holiday', activity: 'Public Holiday' };
+
+        const rand = Math.random();
+        let hours, status;
+        if (rand < 0.1) { hours = 0; status = 'no-load'; }
+        else if (rand < 0.3) { hours = Math.floor(Math.random() * 7) + 1; status = 'partial'; }
+        else if (rand < 0.8) { hours = 8; status = 'standard'; }
+        else { hours = 9 + Math.floor(Math.random() * 3); status = 'overtime'; }
+
+        return {
+            day,
+            hours,
+            status,
+            activity: hours > 0 ? activities_list[Math.floor(Math.random() * activities_list.length)] : 'Administrative / Email'
+        };
+    });
+};
+
+// Helper to generate a random workload array (12 weeks)
+const genWorkload = () => Array.from({ length: 12 }, () => Math.floor(Math.random() * 15) + 35); // 35-50 hours
+
+const employees = [];
+
+// Create 4 Managers for MDA
+const mdaManagers = [
+    { id: 'mgr-mda-1', name: 'Robert Chen', email: 'robert.chen@engportal.com', role: 'MDA Unit Manager', department: 'MDA', region_id: 'reg-na', status: 'active', utilization: 85, join_date: '2015-05-10', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
+    { id: 'mgr-mda-2', name: 'Anjali Gupta', email: 'anjali.gupta@engportal.com', role: 'MDA Technical Lead', department: 'MDA', region_id: 'reg-sa', status: 'active', utilization: 90, join_date: '2016-08-20', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
+    { id: 'mgr-mda-3', name: 'Marcus Steiner', email: 'marcus.steiner@engportal.com', role: 'MDA Design Manager', department: 'MDA', region_id: 'reg-eu', status: 'active', utilization: 78, join_date: '2017-03-15', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
+    { id: 'mgr-mda-4', name: 'Elena Rodriguez', email: 'elena.rodriguez@engportal.com', role: 'MDA Analysis Lead', department: 'MDA', region_id: 'reg-la', status: 'active', utilization: 82, join_date: '2018-11-05', manager_id: 'dept-mgr-mda', workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
+];
+
+employees.push(...mdaManagers);
+
+// Create Department Manager for MDA
+employees.push({
+    id: 'dept-mgr-mda',
+    name: 'James Sterling',
+    email: 'james.sterling@engportal.com',
+    role: 'MDA Department Head',
+    department: 'MDA',
+    region_id: 'reg-na',
+    status: 'active',
+    utilization: 60,
+    join_date: '2010-01-01',
+    manager_id: null,
+    workload: genWorkload(),
+    dailyWorkload: genDailyWorkload('active')
+});
+
+// Generate 70 more employees for MDA distributed among the 4 managers
+const names = ['Liam', 'Noah', 'Oliver', 'James', 'Elijah', 'William', 'Henry', 'Lucas', 'Benjamin', 'Theodore', 'Emma', 'Charlotte', 'Amelia', 'Sophia', 'Mia', 'Isabella', 'Ava', 'Evelyn', 'Luna', 'Harper'];
+const surnames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+
+for (let i = 1; i <= 70; i++) {
+    const mgr = mdaManagers[i % 4];
+    const name = names[Math.floor(Math.random() * names.length)];
+    const surname = surnames[Math.floor(Math.random() * surnames.length)];
+    const fullName = `${name} ${surname} ${i}`;
+    const empStatus = Math.random() > 0.1 ? 'active' : 'on_leave';
+
+    employees.push({
+        id: `emp-mda-${i}`,
+        name: fullName,
+        email: `${name.toLowerCase()}.${surname.toLowerCase()}${i}@engportal.com`,
+        role: i % 5 === 0 ? 'Senior Engineer' : 'Junior Engineer',
+        department: 'MDA',
+        region_id: mgr.region_id,
+        status: empStatus,
+        utilization: Math.floor(Math.random() * 40) + 60,
+        join_date: '2022-01-01',
+        manager_id: mgr.id,
+        workload: genWorkload(),
+        dailyWorkload: genDailyWorkload(empStatus)
+    });
+}
+
+// Add some for ICEE and OPS
+employees.push(
+    { id: 'emp-icee-1', name: 'Kenji Sato', email: 'kenji.sato@engportal.com', role: 'ICEE Manager', department: 'ICEE', region_id: 'reg-eu', status: 'active', utilization: 88, join_date: '2018-05-15', manager_id: null, workload: genWorkload(), dailyWorkload: genDailyWorkload('active') },
+    { id: 'emp-ops-1', name: 'Sarah Miller', email: 'sarah.miller@engportal.com', role: 'OPS Lead', department: 'OPS', region_id: 'reg-na', status: 'active', utilization: 92, join_date: '2017-10-10', manager_id: null, workload: genWorkload(), dailyWorkload: genDailyWorkload('active') }
+);
+
 export const seedData = {
-    regions: [
-        { id: 'reg-na', name: 'North America', code: 'NA', timezone: 'America/New_York', color: '#6366f1' },
-        { id: 'reg-sa', name: 'South Asia', code: 'SA', timezone: 'Asia/Kolkata', color: '#f59e0b' },
-        { id: 'reg-eu', name: 'Europe', code: 'EU', timezone: 'Europe/London', color: '#10b981' },
-        { id: 'reg-la', name: 'Latin America', code: 'LATAM', timezone: 'America/Sao_Paulo', color: '#ef4444' },
-        { id: 'reg-uae', name: 'UAE', code: 'UAE', timezone: 'Asia/Dubai', color: '#8b5cf6' },
-    ],
-    skills: [
-        { id: 's1', name: 'Structural Analysis', category: 'Engineering' },
-        { id: 's2', name: 'FEA/FEM', category: 'Engineering' },
-        { id: 's3', name: 'CFD', category: 'Engineering' },
-        { id: 's4', name: 'CAD Design', category: 'Design' },
-        { id: 's5', name: 'Project Management', category: 'Management' },
-        { id: 's6', name: 'Risk Assessment', category: 'Engineering' },
-        { id: 's7', name: 'Quality Assurance', category: 'Quality' },
-        { id: 's8', name: 'Python/Automation', category: 'Technology' },
-        { id: 's9', name: 'Report Writing', category: 'Documentation' },
-        { id: 's10', name: 'Client Communication', category: 'Soft Skills' },
-        { id: 's11', name: 'ASME Standards', category: 'Standards' },
-        { id: 's12', name: 'Piping Design', category: 'Engineering' },
-        { id: 's13', name: 'Electrical Systems', category: 'Engineering' },
-        { id: 's14', name: 'Process Engineering', category: 'Engineering' },
-        { id: 's15', name: 'AI/ML Applications', category: 'Technology' },
-    ],
-    employees: [
-        { id: 'emp-001', name: 'Rajesh Kumar', email: 'rajesh.kumar@engportal.com', role: 'Senior Structural Engineer', department: 'Structural', region_id: 'reg-sa', status: 'active', utilization: 85, join_date: '2020-03-15' },
-        { id: 'emp-002', name: 'Sarah Mitchell', email: 'sarah.mitchell@engportal.com', role: 'Project Manager', department: 'Management', region_id: 'reg-na', status: 'active', utilization: 92, join_date: '2019-06-01' },
-        { id: 'emp-003', name: 'Hans Weber', email: 'hans.weber@engportal.com', role: 'Lead Process Engineer', department: 'Process', region_id: 'reg-eu', status: 'active', utilization: 78, join_date: '2018-11-20' },
-        { id: 'emp-004', name: 'Maria Garcia', email: 'maria.garcia@engportal.com', role: 'Mechanical Engineer', department: 'Mechanical', region_id: 'reg-la', status: 'active', utilization: 65, join_date: '2021-01-10' },
-        { id: 'emp-005', name: 'Ahmed Al-Rashid', email: 'ahmed.alrashid@engportal.com', role: 'Electrical Engineer', department: 'Electrical', region_id: 'reg-uae', status: 'active', utilization: 88, join_date: '2020-07-22' },
-        { id: 'emp-006', name: 'Priya Sharma', email: 'priya.sharma@engportal.com', role: 'Quality Analyst', department: 'Quality', region_id: 'reg-sa', status: 'active', utilization: 70, join_date: '2021-05-15' },
-        { id: 'emp-007', name: 'James Anderson', email: 'james.anderson@engportal.com', role: 'Senior Piping Engineer', department: 'Piping', region_id: 'reg-na', status: 'on_leave', utilization: 0, join_date: '2017-09-01' },
-        { id: 'emp-008', name: 'Elena Petrova', email: 'elena.petrova@engportal.com', role: 'CAD Designer', department: 'Design', region_id: 'reg-eu', status: 'active', utilization: 95, join_date: '2019-04-18' },
-        { id: 'emp-009', name: 'Carlos Santos', email: 'carlos.santos@engportal.com', role: 'Risk Engineer', department: 'Risk', region_id: 'reg-la', status: 'active', utilization: 72, join_date: '2022-02-01' },
-        { id: 'emp-010', name: 'Fatima Hassan', email: 'fatima.hassan@engportal.com', role: 'Process Engineer', department: 'Process', region_id: 'reg-uae', status: 'travel', utilization: 60, join_date: '2021-08-10' },
-        { id: 'emp-011', name: 'Vikram Patel', email: 'vikram.patel@engportal.com', role: 'AI/ML Engineer', department: 'Technology', region_id: 'reg-sa', status: 'active', utilization: 90, join_date: '2022-06-15' },
-        { id: 'emp-012', name: 'Jennifer Lee', email: 'jennifer.lee@engportal.com', role: 'Technical Writer', department: 'Documentation', region_id: 'reg-na', status: 'active', utilization: 55, join_date: '2023-01-03' },
-        { id: 'emp-013', name: 'Klaus Müller', email: 'klaus.mueller@engportal.com', role: 'Civil Engineer', department: 'Civil', region_id: 'reg-eu', status: 'active', utilization: 80, join_date: '2020-10-12' },
-        { id: 'emp-014', name: 'Isabella Torres', email: 'isabella.torres@engportal.com', role: 'Project Coordinator', department: 'Management', region_id: 'reg-la', status: 'active', utilization: 68, join_date: '2022-09-20' },
-        { id: 'emp-015', name: 'Omar Khalil', email: 'omar.khalil@engportal.com', role: 'Instrumentation Engineer', department: 'Instrumentation', region_id: 'reg-uae', status: 'active', utilization: 82, join_date: '2019-12-05' },
-        { id: 'emp-016', name: 'Ananya Desai', email: 'ananya.desai@engportal.com', role: 'Data Analyst', department: 'Technology', region_id: 'reg-sa', status: 'active', utilization: 75, join_date: '2023-03-01' },
-        { id: 'emp-017', name: 'Michael Brown', email: 'michael.brown@engportal.com', role: 'Engineering Manager', department: 'Management', region_id: 'reg-na', status: 'active', utilization: 88, join_date: '2016-07-14' },
-        { id: 'emp-018', name: 'Sophie Dubois', email: 'sophie.dubois@engportal.com', role: 'Environmental Engineer', department: 'Environmental', region_id: 'reg-eu', status: 'active', utilization: 62, join_date: '2021-11-08' },
-        { id: 'emp-019', name: 'Luis Hernandez', email: 'luis.hernandez@engportal.com', role: 'CFD Specialist', department: 'Simulation', region_id: 'reg-la', status: 'active', utilization: 91, join_date: '2020-04-25' },
-        { id: 'emp-020', name: 'Rashid Al-Maktoum', email: 'rashid.almaktoum@engportal.com', role: 'Senior Project Manager', department: 'Management', region_id: 'reg-uae', status: 'active', utilization: 86, join_date: '2018-02-14' },
-    ],
+    regions,
+    skills,
+    employees,
     projects: [
         { id: 'proj-001', name: 'Offshore Platform Structural Assessment', client: 'PetroGlobal Inc.', description: 'Comprehensive structural integrity assessment for aging offshore platform', status: 'active', region_id: 'reg-na', start_date: '2025-09-01', end_date: '2026-06-30', budget_hours: 4800, spent_hours: 2160, progress: 45, priority: 'high' },
         { id: 'proj-002', name: 'Refinery Expansion - Phase II', client: 'IndoRefine Ltd.', description: 'Process engineering and design for refinery capacity expansion', status: 'active', region_id: 'reg-sa', start_date: '2025-06-15', end_date: '2026-12-31', budget_hours: 12000, spent_hours: 6800, progress: 57, priority: 'critical' },
-        { id: 'proj-003', name: 'Wind Farm Foundation Design', client: 'EuroWind GmbH', description: 'Foundation design for offshore wind farm in the North Sea', status: 'active', region_id: 'reg-eu', start_date: '2025-11-01', end_date: '2026-08-15', budget_hours: 6400, spent_hours: 1920, progress: 30, priority: 'high' },
-        { id: 'proj-004', name: 'Mining Infrastructure Assessment', client: 'MineraCorp SA', description: 'Structural and environmental assessment for copper mining facility', status: 'active', region_id: 'reg-la', start_date: '2025-10-01', end_date: '2026-04-30', budget_hours: 3200, spent_hours: 2240, progress: 70, priority: 'medium' },
-        { id: 'proj-005', name: 'Desalination Plant Design', client: 'AquaGulf LLC', description: 'Full engineering design for large-scale desalination facility', status: 'active', region_id: 'reg-uae', start_date: '2025-07-01', end_date: '2026-09-30', budget_hours: 9600, spent_hours: 5760, progress: 60, priority: 'critical' },
-        { id: 'proj-006', name: 'Bridge Seismic Retrofit', client: 'CalTrans', description: 'Seismic retrofit design for highway bridge infrastructure', status: 'completed', region_id: 'reg-na', start_date: '2025-01-15', end_date: '2025-12-20', budget_hours: 5200, spent_hours: 5100, progress: 100, priority: 'high' },
-        { id: 'proj-007', name: 'Smart Factory Automation', client: 'TechManuf India', description: 'AI-driven automation design for automotive plant', status: 'active', region_id: 'reg-sa', start_date: '2025-12-01', end_date: '2026-10-31', budget_hours: 7200, spent_hours: 1440, progress: 20, priority: 'medium' },
-        { id: 'proj-008', name: 'Pipeline Integrity Assessment', client: 'EuroPipe NV', description: 'Integrity assessment and remaining life analysis for gas pipeline', status: 'on_hold', region_id: 'reg-eu', start_date: '2025-08-01', end_date: '2026-05-31', budget_hours: 4000, spent_hours: 1600, progress: 40, priority: 'medium' },
-        { id: 'proj-009', name: 'Petrochemical Complex Expansion', client: 'PetroBras', description: 'Engineering services for petrochemical complex expansion', status: 'active', region_id: 'reg-la', start_date: '2026-01-05', end_date: '2026-11-30', budget_hours: 8000, spent_hours: 800, progress: 10, priority: 'high' },
-        { id: 'proj-010', name: 'Airport Terminal Structural Design', client: 'Dubai Aviation Auth', description: 'Structural design for new airport terminal building', status: 'active', region_id: 'reg-uae', start_date: '2025-05-01', end_date: '2027-03-31', budget_hours: 15000, spent_hours: 8250, progress: 55, priority: 'critical' },
     ],
-    assignments: [
-        { id: 'asgn-001', project_id: 'proj-001', employee_id: 'emp-001', role: 'Lead Engineer', allocated_hours: 960, spent_hours: 480 },
-        { id: 'asgn-002', project_id: 'proj-001', employee_id: 'emp-002', role: 'Project Manager', allocated_hours: 480, spent_hours: 240 },
-        { id: 'asgn-005', project_id: 'proj-002', employee_id: 'emp-006', role: 'QA Lead', allocated_hours: 600, spent_hours: 340 },
-    ],
-    deliverables: [
-        { id: 'del-001', project_id: 'proj-001', title: 'Structural Integrity Report', status: 'in_progress', due_date: '2026-03-15', completed_date: null, assigned_to: 'emp-001' },
-        { id: 'del-002', project_id: 'proj-001', title: 'FEA Model & Results', status: 'completed', due_date: '2026-01-30', completed_date: '2026-01-28', assigned_to: 'emp-001' },
-    ],
-    reviews: [
-        { id: 'rev-001', project_id: 'proj-001', deliverable_id: 'del-002', reviewer_id: 'emp-017', review_type: 'Technical', status: 'completed', comments: 'FEA results are comprehensive.', rating: 4, review_date: '2026-01-29' },
-    ],
-    trainings: [
-        { id: 'trn-001', title: 'Advanced FEA Techniques', category: 'Technical', duration_hours: 40, provider: 'ANSYS Academy', mandatory: 0 },
-        { id: 'trn-005', title: 'Safety & Risk Management', category: 'Safety', duration_hours: 16, provider: 'Internal', mandatory: 1 },
-    ],
-    employee_skills: [
-        { employee_id: 'emp-001', skill_id: 's1', proficiency: 5 },
-        { employee_id: 'emp-001', skill_id: 's2', proficiency: 4 },
-    ],
-    employee_trainings: [
-        { employee_id: 'emp-001', training_id: 'trn-001', status: 'completed', completion_date: '2025-06-15', score: 92 },
-    ],
-    workflows: [
-        { id: 'wf-001', name: 'Engineering Deliverable Review', description: 'Standard review process', status: 'active', created_by: 'emp-017' },
-    ],
-    workflow_steps: [
-        { id: 'ws-001', workflow_id: 'wf-001', step_order: 1, title: 'Submit Deliverable', assignee_role: 'Engineer', status: 'active' },
-    ],
-    activities: [
-        { id: 'act-001', employee_id: 'emp-001', action: 'Completed deliverable review', entity_type: 'deliverable', entity_id: 'del-002', details: 'FEA Model & Results marked as completed', timestamp: '2026-02-17T08:30:00' },
-        { id: 'act-002', employee_id: 'emp-003', action: 'Updated project progress', entity_type: 'project', entity_id: 'proj-002', details: 'Refinery Expansion progress updated to 57%', timestamp: '2026-02-17T07:15:00' },
-    ],
+    assignments: [],
+    deliverables: [],
+    reviews: [],
+    trainings: [],
+    employee_skills: [],
+    employee_trainings: [],
+    workflows: [],
+    workflow_steps: [],
+    activities: [],
 };
