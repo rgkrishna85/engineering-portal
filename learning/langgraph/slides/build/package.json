@@ -1,0 +1,7 @@
+{
+  "name": "langgraph-day-slides",
+  "private": true,
+  "description": "Generates the day-wise self-study PowerPoint decks from the week-*.md lesson files",
+  "scripts": { "build": "node generate.js" },
+  "dependencies": { "pptxgenjs": "^3.12.0" }
+}
