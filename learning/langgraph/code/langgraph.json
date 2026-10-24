@@ -1,0 +1,9 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "routing": "./day06_routing.py:graph",
+    "leave_approval": "./day21_human_approval.py:graph",
+    "helpdesk": "./capstone_helpdesk_agent.py:graph"
+  },
+  "env": ".env"
+}
