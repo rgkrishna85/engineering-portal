@@ -113,7 +113,7 @@ Think of an **office that handles requests**.
 - **Total: 32 sessions × 30 min = 16 hours, about 7 weeks** at 5 sessions a week.
 - At 3 sessions a week it takes about 11 weeks.
 - **What to expect:** the team will be *comfortable* after Week 2, *useful on real tasks* after Week 4, and *independently productive* after the capstone, plus 2–4 weeks of real project work. That last stretch is normal for any new framework.
-- **Only have 4 weeks?** Use the [4-week fast track](4-week-fast-track.md): 20 sessions, with setup as homework, easier lessons doubled up, and the capstone kept.
+- **Only have 4 weeks?** Use the [4-week plan](4-week-fast-track.md): all 32 sessions (16 h), with two 30-min blocks on 12 of the 20 days.
 - **If you fall behind:** the milestone days (9, 14, 19) double as catch-up days. Skip the 🟡 extras before you skip a Must.
 
 ---
@@ -170,7 +170,7 @@ learning/langgraph/
 ├── week-5-memory-and-humans.md <- Days 20-23
 ├── week-6-production.md    <- Days 24-27
 ├── week-7-capstone.md      <- Days 28-32
-├── 4-week-fast-track.md    <- the same course squeezed into 20 sessions
+├── 4-week-fast-track.md    <- all 32 sessions in 4 weeks (double days)
 ├── progress-tracker.md     <- scores for the team
 └── code/                   <- one runnable file per lesson (tested with LangGraph 1.2)
     ├── requirements.txt, .env.example, llm_setup.py, langgraph.json
