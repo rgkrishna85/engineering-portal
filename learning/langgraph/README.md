@@ -172,6 +172,7 @@ learning/langgraph/
 ├── week-7-capstone.md      <- Days 28-32
 ├── 4-week-fast-track.md    <- all 32 sessions in 4 weeks (double days)
 ├── progress-tracker.md     <- scores for the team
+├── slides/                <- one self-study PowerPoint deck per day (day00-day32)
 └── code/                   <- one runnable file per lesson (tested with LangGraph 1.2)
     ├── requirements.txt, .env.example, llm_setup.py, langgraph.json
     ├── day02 ... day27 *.py
@@ -182,3 +183,5 @@ learning/langgraph/
 The code files are **reference answers**. The intended flow each day: vibe code your own version first, then compare it with the file in `code/`.
 
 **Start here:** [00-setup-and-cheatsheet.md](00-setup-and-cheatsheet.md), then [Week 1](week-1-foundations.md).
+
+**Prefer slides?** Every day is also a self-contained PowerPoint deck in [slides/](slides/README.md), with the concept, an annotated example, the expected output, a vibe-coding prompt, a check task, common mistakes and a quiz.
